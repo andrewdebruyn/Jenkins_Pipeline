@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+    
+    environment {
+        DIRECTORY_PATH = "c:/Documents/Code"
+        TESTING_ENVIRONMENT = "Test1"
+        PRODUCTION_ENVIRONMENT = "Amazon Web Services EC2"
+    }
+    
+    stages {
+        stage('Build') {
+            steps {
+                // Build stage
+                echo 'Build stage - using automation tool - Maven'
+                
+            }
+        }
+        stage('Unit and Integration Tests') {
+            steps {
+                // Test
+                echo 'Unit tests'
+                echo 'Integration tests'
+                echo 'Tool used - Selenium'
+            }
+            
+            post{
+                success{
+                    mail to: "goodabs@gmail.com",
+                    subject: "Unit and Integration Tests",
+                    body: "Unit and Integration tests were successful"
+                }
+            }
+        }
+        stage('Code Analysis') {
+            steps {
+                // Quality check 
+                echo 'Code analysis performed using Sonarcube.'
+            }
+        }
+        stage('Security Scan') {
+            steps {
+                // Deploy
+                echo "Security scan to identify vulnerabilities using Sonarcube."
+            }
+            
+            post{
+                success{
+                    mail to: "goodabs@gmail.com",
+                    subject: "Security Scan",
+                    body: "Security Scan successful"
+                }
+            }
+        }
+        stage('Deploy to Staging') {
+            steps {
+                // Approval
+                echo "Deploy to staging server. Please wait..."
+                sh 'sleep 10'
+                echo 'Deployed to AW2'
+            }
+        }
+        
+        stage('Integration tests on Staging') {
+            steps {
+                // 
+                echo "Running integration tests on staging"
+            }
+            
+            post{
+                success{
+                    mail to: "goodabs@gmail.com",
+                    subject: "Integration Tests on Staging",
+                    body: "Integration tests on staging were successful"
+                }
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                // Production deployment 
+                echo "Deploying to production environemnt: ${env.PRODUCTION_ENVIRONMENT}"
+                
+            }
+        }
+        
+       
+
+    }
+    
+}
